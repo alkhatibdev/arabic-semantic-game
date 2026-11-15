@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfeff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g transform="translate(600 210)">
+    <circle r="86" fill="none" stroke="#0891b2" stroke-width="16"/>
+    <circle r="46" fill="none" stroke="#0891b2" stroke-width="16"/>
+    <circle r="16" fill="#0891b2"/>
+  </g>
+  <text x="600" y="400" text-anchor="middle" font-family="Tahoma, 'Segoe UI', sans-serif"
+        font-size="68" font-weight="bold" fill="#0e7490" direction="rtl">تحدي التشابه والتقارب</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Tahoma, 'Segoe UI', sans-serif"
+        font-size="34" fill="#475569" direction="rtl">خمّن الكلمة السرّية من خلال التشابه الدلالي</text>
+  <text x="600" y="548" text-anchor="middle" font-family="Tahoma, 'Segoe UI', sans-serif"
+        font-size="26" fill="#0891b2" direction="rtl">ألعاب تفكير وتحدي</text>
+</svg>
