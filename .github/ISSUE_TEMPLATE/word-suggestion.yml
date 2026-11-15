@@ -1,0 +1,51 @@
+name: Word suggestion
+description: Suggest Arabic words for the daily puzzle pool
+labels: ["words"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping grow the word pool.
+
+        A good target word is a real Modern Standard Arabic word, written
+        **without diacritics**, a **single token**, and concrete enough to have
+        semantic neighbours. Nothing offensive, and no private individuals' names.
+
+        Every suggestion is reviewed before it can appear. Nothing is
+        auto-approved.
+
+  - type: textarea
+    id: words
+    attributes:
+      label: Words
+      description: One word per line.
+      placeholder: |
+        مطر
+        جسر
+        عدالة
+      render: text
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Where did these come from?
+      description: >
+        Your own suggestions, or a list? If a list, please say which and under
+        what license? We cannot accept words copied from a copyrighted corpus.
+      placeholder: "My own suggestions"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Please confirm
+      options:
+        - label: These are single words without diacritics
+          required: true
+        - label: None of these is offensive, a slur, or a private individual's name
+          required: true
+        - label: I am not revealing a current or upcoming answer
+          required: true
