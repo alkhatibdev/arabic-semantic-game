@@ -23,7 +23,7 @@ scikit-learn==1.7.2
 numpy==2.2.6
 
 # Rate limiting (requires Redis)
-fastapi-limiter==0.1.6
+fastapi-limiter==0.2.0
 redis==5.0.1
 
 # Error tracking (optional, enabled by setting SENTRY_DSN)
