@@ -1,0 +1,85 @@
+name: API
+
+on:
+  push:
+    branches: [main]
+    paths: ["api/**", ".github/workflows/api.yml"]
+  pull_request:
+    paths: ["api/**", ".github/workflows/api.yml"]
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install dev dependencies
+        # CPU-only torch: the CUDA wheels are multi-gigabyte and unused in CI.
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt \
+            --extra-index-url https://download.pytorch.org/whl/cpu
+
+      - run: ruff check .
+      - run: ruff format --check .
+
+      - name: Tests
+        # No database or model download needed; conftest injects a fake model.
+        run: pytest -q
+
+  migrations-and-integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: arabic_semantic_game_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/arabic_semantic_game_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt \
+            --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install psycopg2-binary
+
+      - name: Exactly one migration head
+        run: |
+          heads=$(alembic heads | wc -l)
+          test "$heads" -eq 1 || { alembic heads; echo "expected 1 head, got $heads"; exit 1; }
+
+      - name: Upgrade then downgrade round-trip
+        run: |
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
+
+      - name: Integration tests
+        env:
+          RUN_INTEGRATION_TESTS: "1"
+          RATE_LIMIT_ENABLED: "false"
+          ENV_FILE: /dev/null
+        run: pytest tests/api -q
