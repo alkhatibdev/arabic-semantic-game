@@ -1,0 +1,15 @@
+{
+  "_comment": "Sample seed words with hints. NOT the production list - it exists so a fresh clone is immediately playable. Point WORD_SEED_FILE at your own file for a real deployment, and see docs/word-pool.md. Hints are optional; words may also be given as a plain array of strings.",
+  "words": [
+    { "word": "كتاب", "hints": ["يُقرأ ويُحمل باليد", "له صفحات وغلاف", "تجده في المكتبة"] },
+    { "word": "بحر", "hints": ["واسع وأزرق", "ماؤه مالح", "تسبح فيه الأسماك"] },
+    { "word": "قمر", "hints": ["يُرى ليلاً", "يدور حول الأرض", "له أطوار ومنازل"] },
+    { "word": "مدرسة", "hints": ["مكان للتعلّم", "فيها صفوف ومعلمون", "يذهب إليها الأطفال صباحاً"] },
+    { "word": "شجرة", "hints": ["لها جذور وأغصان", "تمنح الظل", "تنمو في الغابة"] },
+    { "word": "مطر", "hints": ["يسقط من السماء", "يأتي مع الغيوم", "يروي الأرض"] },
+    { "word": "طريق", "hints": ["يوصلك إلى مكان", "تسير عليه السيارات", "قد يكون طويلاً أو قصيراً"] },
+    { "word": "قلب", "hints": ["ينبض في الصدر", "يضخّ الدم", "رمز للمشاعر"] },
+    { "word": "نجم", "hints": ["يلمع في الليل", "بعيد جداً عنّا", "يُهتدى به قديماً"] },
+    { "word": "باب", "hints": ["يُفتح ويُغلق", "مدخل للبيت", "له مفتاح ومقبض"] }
+  ]
+}
