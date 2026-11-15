@@ -1,0 +1,30 @@
+# Direct dependencies only. Previously a full `pip freeze`, which pinned ~20
+# nvidia-* CUDA wheels (multi-GB) that most contributors and CPU deployments
+# never need.
+#
+# For a CPU-only install (much smaller, and what the Dockerfile uses):
+#   pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Web framework
+fastapi==0.120.2
+uvicorn[standard]==0.38.0
+pydantic==2.12.3
+pydantic-settings==2.3.4
+
+# Database
+sqlalchemy==2.0.36
+alembic==1.13.1
+asyncpg==0.29.0
+
+# Embeddings / similarity
+sentence-transformers==5.1.2
+torch==2.9.0
+scikit-learn==1.7.2
+numpy==2.2.6
+
+# Rate limiting (requires Redis)
+fastapi-limiter==0.1.6
+redis==5.0.1
+
+# Error tracking (optional, enabled by setting SENTRY_DSN)
+sentry-sdk==2.43.0
