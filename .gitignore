@@ -1,0 +1,53 @@
+# ---- Secrets
+# Never commit a real env file. `.env.*` alone does NOT match `.env`.
+.env
+.env.*
+!.env.example
+
+# ---- Python / api
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ---- Local databases and data artifacts
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+*.csv
+*.npy
+*.pkl
+# The word list used by a real deployment stays out of the repo until word
+# selection is randomised (see docs/word-pool.md). The sample is tracked.
+# Once selection happens at play time, api/data/word-pool.json becomes tracked
+# too - add an exception for it then, not before.
+api/data/*.json
+!api/data/words.sample.json
+
+# ---- Node / web
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+.vercel
+
+# ---- Models / caches
+.cache/
+huggingface/
+
+# ---- Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
