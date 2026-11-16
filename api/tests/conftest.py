@@ -6,7 +6,8 @@ import os
 # present before anything under app/ is imported.
 os.environ.setdefault("ENV_FILE", "/dev/null")
 os.environ.setdefault(
-    "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/arabic_semantic_game_test"
+    "DATABASE_URL",
+    "postgresql+asyncpg://postgres:postgres@localhost:5432/arabic_semantic_game_test",
 )
 os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 
