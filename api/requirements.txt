@@ -19,7 +19,7 @@ asyncpg==0.32.0
 # Embeddings / similarity
 sentence-transformers==6.3.0
 torch==2.9.0
-scikit-learn==1.7.2
+scikit-learn==1.9.1
 numpy==2.2.6
 
 # Rate limiting (requires Redis)
