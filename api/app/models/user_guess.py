@@ -16,6 +16,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
+from app.core.config import MAX_GUESS_LENGTH
 from app.db.session import Base
 
 
@@ -31,7 +32,10 @@ class UserGuess(Base):
     daily_word_id = Column(
         Integer, ForeignKey("daily_words.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    guessed_word = Column(String, nullable=False)
+    # Length-capped to match the API schema. guessed_word is part of the
+    # uq_user_daily_word_guess btree index, and Postgres refuses an index entry
+    # over ~2704 bytes, so an unbounded column turned a long guess into a 500.
+    guessed_word = Column(String(MAX_GUESS_LENGTH), nullable=False)
     similarity_score = Column(Float, nullable=False)
     cosine_similarity = Column(Float, nullable=False)
     is_correct = Column(Boolean, default=False, nullable=False)

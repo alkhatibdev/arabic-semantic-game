@@ -9,14 +9,18 @@ from app.core.config import settings
 
 async def get_identifier(request: Request) -> str:
     """
-    Get the identifier for rate limiting.
+    The rate-limit bucket key: the client's IP address.
 
-    Uses the client's IP address as the identifier.
-    Can be extended to use user_id from headers or other identifiers.
+    This deliberately does NOT read X-Forwarded-For itself. Any client can send
+    that header, so trusting it here handed every caller the ability to pick its
+    own bucket - a fresh value per request meant no limit at all, and rate
+    limiting is the only thing bounding abuse of an API with no authentication.
+
+    Behind a proxy, let uvicorn do it instead: it rewrites request.client from
+    the forwarded headers only when the connecting peer is in its trusted list.
+    Run with --proxy-headers (on by default) and set FORWARDED_ALLOW_IPS to your
+    proxy's address - it defaults to 127.0.0.1, and must never be "*".
     """
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
 
 

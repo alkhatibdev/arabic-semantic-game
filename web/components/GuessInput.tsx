@@ -53,6 +53,8 @@ export default function GuessInput({
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="أدخل كلمة..."
             autoComplete="off"
+            // Mirrors MAX_GUESS_LENGTH in the API; the server is the real bound.
+            maxLength={64}
             disabled={submitting}
             className="flex-1 px-4 py-3 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-cyan-600 dark:focus:border-cyan-600 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-right bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             dir="rtl"

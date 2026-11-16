@@ -48,8 +48,14 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
   }
 }
 
+// Path segments come from the URL (the [date] route) and from localStorage, so
+// they are encoded rather than interpolated raw: an unencoded "../.." collapsed
+// during URL resolution and pointed the request at an arbitrary path on the API
+// origin, including from generateMetadata on the server.
+const seg = (value: string) => encodeURIComponent(value);
+
 export async function getChallenge(date: string): Promise<Challenge> {
-  return fetchApi<Challenge>(`/api/v1/challenges/${date}`);
+  return fetchApi<Challenge>(`/api/v1/challenges/${seg(date)}`);
 }
 
 export async function submitGuess(submission: GuessSubmission): Promise<Guess> {
@@ -67,11 +73,11 @@ export async function giveUp(submission: GiveUpSubmission): Promise<Guess> {
 }
 
 export async function getGameState(date: string, userId: string): Promise<GameState> {
-  return fetchApi<GameState>(`/api/v1/game/${date}/state/${userId}`);
+  return fetchApi<GameState>(`/api/v1/game/${seg(date)}/state/${seg(userId)}`);
 }
 
 export async function provideWodHint(date: string, userId: string): Promise<WodHint> {
-  return fetchApi<WodHint>(`/api/v1/game/${date}/hints/${userId}`, {
+  return fetchApi<WodHint>(`/api/v1/game/${seg(date)}/hints/${seg(userId)}`, {
     method: "POST",
   });
 }

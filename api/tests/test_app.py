@@ -37,6 +37,28 @@ def test_cors_is_not_wildcard_and_not_credentialed():
     assert options["allow_credentials"] is False
 
 
+async def test_rate_limit_identifier_ignores_forwarded_header():
+    """
+    The bucket key must come from the connection, not from a header.
+
+    get_identifier used to return X-Forwarded-For verbatim, so any client could
+    pick its own bucket and a fresh value per request meant no limit at all.
+    Rate limiting is the only thing bounding an API with no authentication, so
+    this must not regress. Behind a proxy, uvicorn rewrites request.client for
+    trusted peers (--proxy-headers / FORWARDED_ALLOW_IPS) and this still holds.
+    """
+    from app.core.rate_limiter import get_identifier
+
+    class _Request:
+        def __init__(self, headers):
+            self.headers = headers
+            self.client = type("C", (), {"host": "203.0.113.9"})()
+
+    spoofed = await get_identifier(_Request({"X-Forwarded-For": "1.2.3.4"}))
+    assert spoofed == "203.0.113.9", "X-Forwarded-For must not choose the bucket"
+    assert await get_identifier(_Request({})) == "203.0.113.9"
+
+
 def test_rate_limiter_is_a_noop_when_disabled():
     """
     Every route declares a rate-limit dependency unconditionally, so disabling

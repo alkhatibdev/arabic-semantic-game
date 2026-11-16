@@ -6,8 +6,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: arabic_semantic_game
     ports:
+      # Loopback-only: this database has throwaway credentials and must not be
+      # reachable from outside the host. The api service reaches it over the
+      # compose network regardless.
       # Override if you already run Postgres locally: POSTGRES_PORT=55432 docker compose up
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,7 +22,8 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      # Loopback-only: this Redis has no authentication at all.
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

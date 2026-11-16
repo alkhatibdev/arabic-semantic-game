@@ -23,6 +23,13 @@ def _env_files() -> tuple[str, ...]:
     return (legacy, ".env")
 
 
+# Hard cap on a submitted guess, enforced at the API boundary and mirrored by
+# the user_guesses.guessed_word column. A puzzle answer is a single Arabic token
+# (see docs/word-pool.md), so this is already generous. It is a constant rather
+# than a setting because the database column has to agree with it.
+MAX_GUESS_LENGTH = 64
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
@@ -32,6 +39,10 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
+    # Echoes every statement and its bound parameters to stdout. Previously this
+    # was tied to ENVIRONMENT, which defaults to "development", so a deployment
+    # that forgot to set it logged all SQL. Opt in explicitly instead.
+    SQL_ECHO: bool = False
     SENTRY_DSN: str | None = None
 
     # Database

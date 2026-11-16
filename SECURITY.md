@@ -27,10 +27,16 @@ data and nothing to steal. It would not be acceptable if accounts, profiles or
 leaderboards were added. Signed anonymous sessions are on the roadmap for that
 reason.
 
-### Rate limiting requires Redis
+### Rate limiting requires Redis, and correct proxy configuration
 
 `RATE_LIMIT_ENABLED=true` (the default) needs a reachable Redis. Setting it to
 `false` disables limiting entirely, which is fine locally and unsafe in public.
+
+Requests are bucketed by the IP uvicorn reports. The app does not read
+`X-Forwarded-For` itself, because a client can set it freely. If you deploy
+behind a proxy, set `FORWARDED_ALLOW_IPS` to that proxy's address so uvicorn
+resolves the real client address — otherwise every visitor shares one bucket.
+Never set it to `*`. See [docs/configuration.md](docs/configuration.md#behind-a-proxy).
 
 ### Spoiler surface
 

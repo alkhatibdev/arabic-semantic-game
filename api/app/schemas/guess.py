@@ -3,7 +3,9 @@
 from datetime import date, datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.config import MAX_GUESS_LENGTH
 
 
 class GuessRequest(BaseModel):
@@ -11,7 +13,11 @@ class GuessRequest(BaseModel):
 
     user_id: UUID
     challenge_date: date
-    word: str
+    # Bounded on purpose: an unbounded string here reached the embedding model
+    # and the database verbatim. Whitespace is NOT stripped by the validator -
+    # the endpoint still rejects an all-whitespace word with a 400, and a 422
+    # from here would change that contract.
+    word: str = Field(max_length=MAX_GUESS_LENGTH)
 
 
 class GiveUpRequest(BaseModel):

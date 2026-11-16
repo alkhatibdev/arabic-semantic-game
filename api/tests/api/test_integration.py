@@ -157,6 +157,39 @@ async def test_empty_guess_is_rejected(client, player):
     assert r.status_code == 400
 
 
+async def test_oversized_guess_is_rejected(client, player):
+    """
+    A guess longer than MAX_GUESS_LENGTH must be refused by validation.
+
+    `word` was an unbounded string, so a multi-megabyte value reached the
+    embedding model and the database. guessed_word is also part of a btree
+    unique index, which Postgres caps at ~2704 bytes per entry, so a long
+    incompressible guess raised an unhandled database error rather than a 4xx.
+    """
+    from app.core.config import MAX_GUESS_LENGTH
+
+    r = await client.post(
+        "/api/v1/game/guess",
+        json={
+            "user_id": player,
+            "challenge_date": TODAY.isoformat(),
+            "word": "ك" * (MAX_GUESS_LENGTH + 1),
+        },
+    )
+    assert r.status_code == 422
+
+    # A word at the limit is still perfectly playable.
+    ok = await client.post(
+        "/api/v1/game/guess",
+        json={
+            "user_id": player,
+            "challenge_date": TODAY.isoformat(),
+            "word": "ك" * MAX_GUESS_LENGTH,
+        },
+    )
+    assert ok.status_code == 200
+
+
 async def test_hint_allowance_is_enforced(client, player):
     for _ in range(3):
         r = await client.post(f"/api/v1/game/{TODAY}/hints/{player}")
